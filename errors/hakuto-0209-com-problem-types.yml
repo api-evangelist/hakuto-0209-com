@@ -1,0 +1,68 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Error responses observed on https://mcp.hakuto-0209.com/a2a/v1, https://mcp.hakuto-0209.com/mcp and the
+  two web hosts during the 2026-09-19 probes, plus the error-related statements in
+  https://mcp.hakuto-0209.com/terms. No OpenAPI exists to derive 4xx/5xx responses from and no error
+  reference page is published; this catalog is what the surface actually returned.
+format: custom
+content_type: application/json; charset=utf-8
+envelope:
+  a2a_http_layer:
+    shape: '{"error":{"code":"<slug>","message":"<Japanese>","hint":"<Japanese, remediation>"}}'
+    note: Returned by the HTTP gate in front of the A2A JSON-RPC dispatcher; not a JSON-RPC error object and not RFC 9457. Messages and hints are Japanese.
+  mcp:
+    shape: 'JSON-RPC 2.0 error object {"jsonrpc":"2.0","id":<id>,"error":{"code":<int>,"message":"<text>"}} delivered as an SSE "message" event inside an HTTP 200'
+problems:
+- code: unauthenticated
+  http_status: 401
+  surface: A2A /a2a/v1 (GET and any unkeyed POST)
+  title: API key (b612 licence key) not supplied
+  message_ja: APIキー（b612 ライセンスキー）が指定されていません
+  hint_ja: 'ヘッダー x-b612-key に b612 のライセンスキーを入れてください。キー無しでも次のスキルは試せます: principles / rules（データ取扱いは https://mcp.hakuto-0209.com/terms）'
+  remediation: Send the licence key in the x-b612-key header; obtain one from the provider (https://hakuto-0209.com/#contact). The hint says principles/rules are keyless, but an unkeyed JSON-RPC POST was still refused in this probe.
+  observed: true
+- code: -32601
+  http_status: 200
+  surface: MCP /mcp
+  title: Method not found
+  message: Method not found
+  remediation: Only initialize, tools/list and tools/call are implemented; resources/list and prompts/list return this error.
+  observed: true
+- code: -32000
+  http_status: 406
+  surface: MCP /mcp (GET, or POST without Accept text/event-stream)
+  title: Not Acceptable
+  message: 'Not Acceptable: Client must accept text/event-stream'
+  body: '{"jsonrpc":"2.0","error":{"code":-32000,"message":"Not Acceptable: Client must accept text/event-stream"},"id":null}'
+  remediation: The endpoint is POST-only Streamable HTTP; send POST with Accept application/json, text/event-stream.
+  observed: true
+- code: null
+  http_status: 404
+  surface: mcp.hakuto-0209.com (any unknown path)
+  title: Cannot GET <path>
+  content_type: text/html; charset=utf-8
+  remediation: Express default 404 (143-177 bytes); the host serves only /, /terms, /uninstall, /mcp, /a2a/v1 and the three well-known documents.
+  observed: true
+- code: NOT_FOUND
+  http_status: 404
+  surface: hakuto-0209.com (any unknown path)
+  title: The page could not be found
+  content_type: text/plain; charset=utf-8
+  remediation: Vercel static-site 404; the apex hosts no API or agent surface.
+  observed: true
+documented_not_observed:
+- condition: Rate limit exceeded
+  http_status: null
+  source: https://mcp.hakuto-0209.com/terms
+  quote: Requests are rate limited per IP.
+  note: The status code and any Retry-After signal on exhaustion are not documented and were not triggered.
+- condition: Request body over 4 MB
+  http_status: null
+  source: https://mcp.hakuto-0209.com/terms
+  quote: Request bodies are limited to 4 MB.
+- condition: Nothing could be scanned (scan-code)
+  http_status: null
+  source: https://mcp.hakuto-0209.com/terms
+  quote: '"Zero findings" is reported separately from "nothing could be scanned". Never read one as the other.'
+  note: A result-level distinction the provider commits to, not an HTTP error; recorded because an agent must not read an empty findings list as a clean scan.

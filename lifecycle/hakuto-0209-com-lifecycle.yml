@@ -1,0 +1,48 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://mcp.hakuto-0209.com/terms (§5 limits, §6 availability, §9 trial end, version stamp),
+  https://mcp.hakuto-0209.com/.well-known/agent-card.json (version, protocolVersion, supportedInterfaces),
+  the MCP initialize response (serverInfo, protocolVersion), https://mcp.hakuto-0209.com/.well-known/jwks.json
+  (kid) and https://mcp.hakuto-0209.com/uninstall — 2026-09-19. No status page, changelog, deprecation policy
+  or SLA page exists; each absence below was probed.
+versioning:
+  scheme: semver on the product; protocol versions negotiated per surface
+  current:
+    agent_card_version: 0.1.0
+    mcp_server_version: 0.1.0
+    a2a_protocol_version: '0.3 (top-level); supportedInterfaces[] also declares 1.0 on the same URL'
+    mcp_protocol_version: '2025-06-18 (negotiated at initialize)'
+    data_policy_version: '2026-09-11'
+    signing_key_id: b612-a2a-2026-09
+  mechanism: >-
+    No version segment in the A2A path other than /a2a/v1 and no version header. The A2A endpoint advertises
+    both protocol revisions 1.0 and 0.3 on one URL, so a client of either revision is served without a
+    separate path. The signing key id is month-stamped, which implies a rotation scheme, but no rotation
+    policy is published.
+  docs: https://mcp.hakuto-0209.com/
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  notes: No deprecation policy, sunset commitment or RFC 8594 headers are published. The legacy /.well-known/agent.json path is still served alongside the canonical card.
+changelog:
+  url: null
+  notes: None published. The data policy carries a version date (2026-09-11) but no change history.
+sla:
+  url: https://mcp.hakuto-0209.com/terms
+  public_uptime_target: null
+  quote: 'No uptime guarantee is offered on the public endpoint. Contact us for a service agreement.'
+  notes: An explicit no-SLA statement for the public endpoint, with a service agreement available on contact.
+status_page: null
+support_lifetime:
+  stated_period: null
+  notes: >-
+    Not stated for the API. For the local integration the uninstall page states that a free trial stops
+    automatically when it ends and that installed files can be left in place without affecting other work.
+trial_and_cancellation:
+  trial: 'Trials stop automatically with no charge (terms §9).'
+  cancellation: 'Monthly plans can be cancelled at any time; no cancellation fee; notice by e-mail or LINE by month-end for the following month (company page).'
+  post_cancellation_data: 'Usage records in terms §8 are not deleted automatically on trial end or cancellation, except those with a stated retention period; deletion on request via LINE or info@hakuto-0209.com.'
+  uninstall_docs: https://mcp.hakuto-0209.com/uninstall
+deprecated_operations: []

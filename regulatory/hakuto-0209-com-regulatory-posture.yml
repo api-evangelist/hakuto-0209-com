@@ -1,0 +1,92 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: https://mcp.hakuto-0209.com/terms
+probed:
+- {url: https://hakuto-0209.com/accessibility, status: 404}
+- {url: https://hakuto-0209.com/legal, status: 404}
+- {url: https://hakuto-0209.com/legal/hakuto-privacy.html, status: 200}
+- {url: https://hakuto-0209.com/legal/hakuto-terms.html, status: 200}
+- {url: https://hakuto-0209.com/legal/hakuto-company.html, status: 200}
+- {url: https://mcp.hakuto-0209.com/terms, status: 200}
+- {url: https://mcp.hakuto-0209.com/uninstall, status: 200}
+- {url: https://mcp.hakuto-0209.com/.well-known/security.txt, status: 404}
+- {url: https://hakuto-0209.com/.well-known/security.txt, status: 404}
+signals:
+  ai_transparency:
+    url: https://mcp.hakuto-0209.com/terms
+    section: '2. What we do with it'
+    evidence:
+    - source: https://mcp.hakuto-0209.com/terms
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'No large language model is involved. Your code is never sent to any AI provider. Your code is never sent to any third party, and is never used to train anything.'
+    - source: https://hakuto-0209.com/legal/hakuto-privacy.html
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: '本サービスでは、開発支援および要件整理のために、Anthropic（Claude）・OpenAI（ChatGPT）・Google（Gemini）等の外部 AI サービスを利用することがあります。… 保存・学習対象から除外する設定（オプトアウト等）を適切に行うよう努めます。'
+    note: >-
+      Two published statements about AI use, one per product. For the b612 agent: an explicit disclosure that
+      the service uses NO LLM and sends no submitted code to any AI provider (the card repeats "Deterministic
+      checks — no LLM inference"). For the development service (hakuto AI): the privacy policy names the
+      external AI providers that may receive customer material (Anthropic, OpenAI, Google) and commits to
+      opt-out settings. Carried in the data policy and privacy policy, not on a dedicated /ai page.
+  data_subject_request:
+    url: https://mcp.hakuto-0209.com/terms
+    section: '10. Deletion requests / 削除のご依頼'
+    channel: info@hakuto-0209.com or the provider's official LINE account
+    stated_sla: null
+    rights_named: [deletion (agent usage records, terms §10), disclosure, correction, addition, deletion and suspension of use (privacy policy §7)]
+    exclusions_stated: 'the trial-usage flag (needed to limit one trial per person) and transaction records required by law'
+    evidence:
+    - source: https://mcp.hakuto-0209.com/terms
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'To request deletion, contact us via LINE or info@hakuto-0209.com. We keep only the trial-usage flag (needed to limit one trial per person) and transaction records required by law.'
+    - source: https://hakuto-0209.com/legal/hakuto-privacy.html
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'お客様ご本人は、当社に対し、ご自身の個人情報の開示・訂正・追加・削除・利用停止等を請求することができます。下記のお問い合わせ窓口までご連絡ください。'
+    note: A documented request channel with identity verification ("after confirming you are the contract holder") and named exclusions. No response period is stated and there is no intake form or API.
+  subprocessors:
+    url: https://mcp.hakuto-0209.com/terms
+    section: '8. Usage records and retention / 記録している利用状況と保存期間'
+    dated: '2026-09-11'
+    entries:
+    - {vendor: Vercel, purpose: hosting and operational logs (timestamp, path, status, IP; no request bodies), retention: 'per the hosting provider''s terms'}
+    - {vendor: Stripe, purpose: payment processing (provider holds customer/subscription identifiers and status only; no card numbers)}
+    - {vendor: LINE, purpose: official account for licence binding, consent, trial flag and optional memo feature (memo text kept 90 days)}
+    - {vendor: 'Anthropic / OpenAI / Google', purpose: 'external AI services used by the development service hakuto AI (privacy policy §3-4), not by the b612 agent'}
+    evidence:
+    - source: https://mcp.hakuto-0209.com/terms
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: '(g) お支払い … 決済は Stripe 社が処理します。当社が持つのは Stripe 上の顧客・契約の識別子と契約状態で、カード番号は持ちません。 (h) ホスティング（Vercel）の稼働ログ … 保存期間はホスティング事業者の定めによります。'
+    - source: https://hakuto-0209.com/legal/hakuto-privacy.html
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: '業務委託先に必要な範囲で取扱いを委託する場合（決済代行・サーバー事業者・AI 提供事業者など）'
+    note: >-
+      Not a standalone subprocessor list page (/legal/subprocessors was not probed because /legal itself
+      404s), but the versioned data policy itemises each third party, what it receives and how long the
+      associated record is kept — the substance the signal requires. Retention periods stated verbatim in
+      §8: salted-hash source counts 8 days; device id 60 days unused; cross-device interval 60 days; LINE
+      memos 90 days; per-licence usage counts not auto-deleted.
+absent:
+- sbom
+- support_lifetime
+- accessibility_conformance
+- training_data_summary
+- global_privacy_control
+- data_residency
+- incident_notification
+- age_assurance
+- notice_and_action
+- transparency_report
+- exit_assistance
+absent_note: >-
+  exit_assistance is close but not met: the uninstall page (https://mcp.hakuto-0209.com/uninstall) documents
+  how to remove the local integration and the terms say delivered code stays with the customer, but neither
+  is a data-export/portability commitment for the agent service. data_residency: hosting is stated as Vercel
+  with no region commitment. No SBOM, VPAT, GPC statement, breach-notification SLA or transparency report is
+  published anywhere probed.

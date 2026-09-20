@@ -1,0 +1,71 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: HaneruTo
+providerId: hakuto-0209-com
+generated: '2026-09-19'
+method: searched
+created: '2026-09-19'
+modified: '2026-09-19'
+tags:
+- Agents
+- MCP
+- A2A
+- Code Review
+description: >-
+  b612's agent access has two published tiers and one published price of null: a free keyless tier limited
+  to the principles and rules skills at 20 requests/min per IP, and a paid licence sold as "a monthly flat
+  fee with a call cap" whose amount "depends on your volume — please contact us". The data policy adds that
+  individual and contract developers "can use the existing monthly licence as-is" for agent access, i.e. the
+  same b612 licence key covers the Claude Code / Codex integration and the A2A/MCP surface. The company's
+  特定商取引法 disclosure page publishes prices for its development service (hakuto AI: ¥100,000/month +
+  ¥300,000 initial, ¥50,000 per additional PC, all tax-inclusive, Stripe or bank transfer) but does NOT
+  price b612 or the agent surface; those figures are recorded in a note, not as API plans.
+sources:
+- https://mcp.hakuto-0209.com/.well-known/agent-card.json
+- https://mcp.hakuto-0209.com/terms
+- https://hakuto-0209.com/legal/hakuto-company.html
+plan_count: 2
+plans:
+- id: b612-free-keyless
+  name: Free (keyless) — principles and rules
+  type: free
+  price: 0
+  currency: JPY
+  billing_period: none
+  description: No licence key required. Limited to the principles and rules skills / tools.
+  entries:
+  - label: Requests per minute per IP
+    name: rpm_per_ip
+    type: rate
+    metric: requests
+    limit: 20
+    timeFrame: minute
+  source: https://mcp.hakuto-0209.com/.well-known/agent-card.json
+  quote: 'Free to try: principles and rules need no key (20 req/min per IP).'
+- id: b612-agent-licence
+  name: Agent-to-agent licence (monthly flat fee with call cap)
+  type: subscription
+  price: null
+  currency: JPY
+  billing_period: month
+  description: >-
+    All skills/tools with an x-b612-key. Priced on contact; the call cap scales with volume. Trials exist
+    and stop automatically with no charge (terms §9); monthly plans can be cancelled at any time with no
+    cancellation fee (company page).
+  entries:
+  - label: Monthly call cap
+    name: call_cap
+    type: quota
+    metric: calls
+    limit: null
+    timeFrame: month
+    note: Cap set per contract by volume; not published.
+  source: https://mcp.hakuto-0209.com/terms
+  quote: 'Agent-to-agent access is priced as a monthly flat fee with a call cap. The cap depends on your volume — please contact us below.'
+  contact: https://hakuto-0209.com/#contact
+note: >-
+  Development-service pricing published at https://hakuto-0209.com/legal/hakuto-company.html (hakuto AI:
+  ¥100,000/month tax-inclusive + ¥300,000 initial fee; ¥50,000 per additional PC; one-off delivery by
+  quote; consultation and mock-up free) is the price of the consulting product, not of API or agent access,
+  and is deliberately not recorded as a plan.

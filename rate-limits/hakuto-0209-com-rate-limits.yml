@@ -1,0 +1,52 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: HaneruTo
+providerId: hakuto-0209-com
+generated: '2026-09-19'
+method: searched
+created: '2026-09-19'
+modified: '2026-09-19'
+tags:
+- Rate Limiting
+- MCP
+- A2A
+description: >-
+  The only numeric limit the provider publishes is on the keyless tier: the agent card states that the
+  principles and rules skills "need no key (20 req/min per IP)". The data policy adds that all requests are
+  rate limited per IP and that request bodies are capped at 4 MB, without numbers for keyed traffic — the
+  paid tier is sold as "a monthly flat fee with a call cap" whose cap "depends on your volume", so the keyed
+  limit is contractual, not published. No rate-limit response headers were observed on any probed response
+  and the status code on exhaustion is not documented.
+sources:
+- https://mcp.hakuto-0209.com/.well-known/agent-card.json
+- https://mcp.hakuto-0209.com/terms
+limit_count: 1
+headers:
+  rateLimit: null
+  rateLimitRemaining: null
+  rateLimitReset: null
+  retryAfter: null
+  requestId: null
+responseCodes:
+  throttled: null
+  payloadTooLarge: null
+limits:
+- name: Keyless tier (principles, rules)
+  scope: ip
+  metric: requests_per_minute
+  limit: 20
+  timeFrame: minute
+  applies_to: [b612_principles, b612_rules, A2A skills principles and rules]
+  source: https://mcp.hakuto-0209.com/.well-known/agent-card.json
+  quote: 'Free to try: principles and rules need no key (20 req/min per IP).'
+undocumented:
+- name: Keyed tier (all tools/skills with x-b612-key)
+  scope: ip and per-licence call cap
+  limit: null
+  note: '"Requests are rate limited per IP" (terms §5) and "a monthly flat fee with a call cap — the cap depends on your volume" (terms §7); no number published.'
+constraints:
+- name: Request body size
+  limit: 4 MB
+  source: https://mcp.hakuto-0209.com/terms
+  quote: 'Requests are rate limited per IP. Request bodies are limited to 4 MB.'

@@ -1,0 +1,78 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live probes of https://mcp.hakuto-0209.com (agent card, JWKS, MCP initialize/tools/list, A2A JSON-RPC
+  401), signature verification of the card against the published JWKS, and the /.well-known/ sweep in
+  well-known/hakuto-0209-com-well-known.yml — 2026-09-19. There is no OpenAPI to derive from and the
+  provider publishes no compliance or certification claims.
+standards:
+- id: a2a
+  version: '0.3 (card also declares 1.0 in supportedInterfaces[])'
+  conforms: true
+  evidence: >-
+    Agent card at https://mcp.hakuto-0209.com/.well-known/agent-card.json graded conformant against the A2A
+    1.0.0 hard checks (capabilities object, protocolVersion present, skills array) — see
+    a2a/hakuto-0209-com-a2a.yml. JSON-RPC binding at /a2a/v1 answers with a structured 401 when unkeyed.
+- id: a2a-agent-card-signature
+  version: A2A 0.3 signatures[] / JWS RFC 7515 / JCS RFC 8785
+  conforms: true
+  evidence: >-
+    The card carries one JWS signature (alg EdDSA, kid b612-a2a-2026-09, jku
+    https://mcp.hakuto-0209.com/.well-known/jwks.json). Verified 2026-09-19: the Ed25519 key of that kid from
+    the published JWKS validates the signature over the JCS-canonicalised card without signatures[]. An
+    insertion-order payload does not validate, confirming RFC 8785 canonicalisation was used.
+- id: jwks
+  version: RFC 7517
+  conforms: true
+  evidence: https://mcp.hakuto-0209.com/.well-known/jwks.json — 200 application/json, one OKP/Ed25519 key with kid, use sig, alg EdDSA.
+- id: rfc8615-well-known
+  conforms: true
+  evidence: agent-card.json, agent.json and jwks.json served under /.well-known/ on the MCP/A2A host; every other probed well-known path 404s cleanly.
+- id: mcp
+  version: '2025-06-18'
+  conforms: true
+  evidence: >-
+    POST https://mcp.hakuto-0209.com/mcp initialize returned protocolVersion 2025-06-18, serverInfo
+    {b612, 0.1.0}, capabilities.tools.listChanged true; tools/list returned 10 tools each with an inputSchema
+    and an execution.taskSupport field; unsupported methods return JSON-RPC -32601. Streamable HTTP transport
+    (text/event-stream responses; GET 406).
+- id: json-schema
+  version: draft-07
+  conforms: true
+  evidence: >-
+    Tool inputSchemas that declare properties carry "$schema": "http://json-schema.org/draft-07/schema#"
+    (b612_review_checklist, b612_patterns, b612_domain_preset, b612_design, b612_reference, b612_grow,
+    b612_notes, b612_update).
+- id: json-rpc
+  version: '2.0'
+  conforms: true
+  evidence: Both MCP and A2A surfaces speak JSON-RPC 2.0; MCP errors are well-formed error objects (-32601 Method not found).
+- id: oauth2
+  conforms: false
+  evidence: No /.well-known/oauth-authorization-server on any host; authentication is a static API key header (x-b612-key).
+- id: rfc9728-protected-resource-metadata
+  conforms: false
+  evidence: https://mcp.hakuto-0209.com/.well-known/oauth-protected-resource — 404. The MCP resource publishes no protected-resource metadata.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration — 404 on hakuto-0209.com and mcp.hakuto-0209.com.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'The HTTP-layer error envelope is a custom {"error":{"code","message","hint"}} object served as application/json, not application/problem+json.'
+- id: openapi
+  conforms: false
+  evidence: No OpenAPI/Swagger document at any conventional path on either host; the provider exposes MCP and A2A only.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt and /security.txt — 404 on all three hosts.
+domain_standard:
+  applicable: false
+  note: >-
+    b612's market (code-review knowledge for AI coding assistants, Japanese legal checkpoints) has no
+    interchange standard of its own; the agent-protocol standards it does implement (A2A, MCP) are recorded
+    above. Nothing is asserted to fill the slot. The Japanese statutes it references (景表法, 特商法, 薬機法,
+    インボイス制度, 電帳法, 宅建業法, 介護保険法) are the SUBJECT of its checklists, not a conformance claim
+    about the provider — the data policy states the items are "checkpoints for your own legal review, not a
+    certification of compliance".
+compliance_claims: []
+compliance_note: The provider publishes no SOC 2 / ISO 27001 / privacy-mark or other certification claim; no Compliance pointer is emitted.

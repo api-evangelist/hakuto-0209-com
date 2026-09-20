@@ -1,0 +1,159 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* and root discovery paths on hakuto-0209.com,
+  mcp.hakuto-0209.com (the MCP server host and A2A host) and b612-a2a.vercel.app (the Vercel origin behind
+  it), 2026-09-19. Every row is a request that was actually issued; every status is the one returned.
+  www.hakuto-0209.com does not resolve (no DNS record).
+summary:
+  hosts_probed: 3
+  documents_served: 3
+  hit_count: 3
+  path_echo_control: passed
+  note: >-
+    The provider serves three well-known documents, all on the MCP/A2A host: the A2A agent card at
+    /.well-known/agent-card.json (signed), the same card at the legacy /.well-known/agent.json (unsigned),
+    and a JWKS at /.well-known/jwks.json holding the Ed25519 key that signs the card. Every other named path
+    returns the host's real 404 (Express "Cannot GET <path>" text/html, 143-177 bytes) and a negative-control
+    path also 404s, so the 200s are served documents. The apex hakuto-0209.com serves nothing under
+    /.well-known/ — every path returns Vercel's text/plain NOT_FOUND (79 bytes). No security.txt on any host,
+    no OAuth/OIDC discovery, no RFC 9728 protected-resource metadata for the MCP resource, no RFC 9727 API
+    catalog, no APIs.json, no ai-plugin, no llms.txt. The vercel.app origin answers identically to
+    mcp.hakuto-0209.com for every path.
+hosts:
+- host: mcp.hakuto-0209.com
+  role: MCP server host (https://mcp.hakuto-0209.com/mcp) and A2A JSON-RPC host (/a2a/v1); Vercel deployment b612-a2a
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 7527
+    file: ../a2a/hakuto-0209-com-agent-card.json
+    standard: A2A Agent Card (protocolVersion 0.3, JWS-signed)
+    note: Saved verbatim under a2a/ and graded in a2a/hakuto-0209-com-a2a.yml (conformant); signature verified against the JWKS below.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 7263
+    standard: A2A Agent Card (legacy pre-0.3 path)
+    note: Identical to agent-card.json with the signatures[] block omitted. Not saved separately.
+  - path: /.well-known/jwks.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 141
+    file: hakuto-0209-com-jwks.json
+    standard: JWK Set (RFC 7517)
+    note: One key — kty OKP, crv Ed25519, kid b612-a2a-2026-09, use sig, alg EdDSA. Referenced by the agent card signature's jku.
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: This is the MCP resource host; no RFC 9728 metadata is served for https://mcp.hakuto-0209.com/mcp.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /.well-known/llms.txt
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /openapi.yaml
+    status: 404
+  - path: /swagger.json
+    status: 404
+  - path: /api-docs
+    status: 404
+  - path: /docs
+    status: 404
+  - path: /robots.txt
+    status: 404
+  - path: /.well-known/apievangelist-negative-control-7f3a9c.json
+    status: 404
+    note: Negative control — a path that cannot exist; confirms the host is not a catch-all.
+- host: hakuto-0209.com
+  role: Website (Vercel static site); no API or agent surface of its own
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /.well-known/jwks.json
+    status: 404
+  - path: /.well-known/llms.txt
+    status: 404
+  - path: /llms.txt
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /openapi.json
+    status: 404
+  - path: /robots.txt
+    status: 200
+    content_type: text/plain
+    note: 'User-agent: * / Allow: / / Sitemap: https://hakuto-0209.com/sitemap.xml. Not a discovery document; recorded for the sitemap reference.'
+  - path: /sitemap.xml
+    status: 200
+    content_type: application/xml
+    note: Site pages only (services, legal, media sub-sites); no API or agent pages listed.
+- host: b612-a2a.vercel.app
+  role: Vercel origin for mcp.hakuto-0209.com (the URL a2aregistry.org listed); answers identically
+  documents:
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    bytes: 7527
+    note: Byte-identical to the mcp.hakuto-0209.com card.
+  - path: /.well-known/agent.json
+    status: 200
+    bytes: 7263
+  - path: /.well-known/jwks.json
+    status: 200
+    bytes: 141
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /.well-known/llms.txt
+    status: 404

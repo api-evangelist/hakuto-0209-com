@@ -1,0 +1,56 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  https://mcp.hakuto-0209.com/.well-known/agent-card.json (securitySchemes + security), the provider's
+  quickstart at https://mcp.hakuto-0209.com/, the 401 body observed on https://mcp.hakuto-0209.com/a2a/v1,
+  the anonymous MCP probes on https://mcp.hakuto-0209.com/mcp, and the key-handling section of
+  https://mcp.hakuto-0209.com/terms — 2026-09-19. No OpenAPI exists to derive from.
+docs: https://mcp.hakuto-0209.com/
+summary:
+  types: [apiKey]
+  oauth2: false
+  oidc: false
+  keyless_tier: true
+schemes:
+- name: b612ApiKey
+  type: apiKey
+  in: header
+  header: x-b612-key
+  description: >-
+    b612 license key, sent verbatim in the x-b612-key header on both the A2A JSON-RPC endpoint and the MCP
+    endpoint. Declared in the agent card as securitySchemes.b612ApiKey ("b612 license key. Contact the
+    provider to obtain one.") and required by the card's top-level security[] on every skill. Keys are
+    issued by the provider on contact (https://hakuto-0209.com/#contact) under a monthly licence; there is
+    no self-serve sign-up or developer console.
+  key_handling: >-
+    Per the data policy: the key is SHA-256 hashed and only the hash is sent to the licence endpoint for
+    validation; the plaintext is never stored or logged; validation results are cached in memory for a few
+    minutes. Usage is recorded per licence hash (counts, last use, version, access route) for licence
+    management.
+  sources:
+  - https://mcp.hakuto-0209.com/.well-known/agent-card.json
+  - https://mcp.hakuto-0209.com/
+  - https://mcp.hakuto-0209.com/terms
+surfaces:
+- surface: A2A JSON-RPC (https://mcp.hakuto-0209.com/a2a/v1)
+  requires_key: true
+  observed: >-
+    GET and an unauthenticated POST (tasks/get) both return HTTP 401 with envelope
+    {"error":{"code":"unauthenticated","message":"APIキー（b612 ライセンスキー）が指定されていません","hint":
+    "ヘッダー x-b612-key に … キー無しでも次のスキルは試せます: principles / rules …"}}. No WWW-Authenticate
+    header is returned. The hint names a keyless tier, but the gate refused a keyless JSON-RPC request before
+    dispatch in this probe.
+- surface: MCP Streamable HTTP (https://mcp.hakuto-0209.com/mcp)
+  requires_key: partial
+  observed: >-
+    initialize, tools/list and tools/call b612_principles all answered 200 with no key. The card describes
+    principles and rules as keyless (20 req/min per IP); the remaining eight tools were not called and are
+    presumed to require the key per the quickstart's --header instruction.
+unauthenticated_response:
+  status: 401
+  content_type: application/json; charset=utf-8
+  envelope: '{"error":{"code":"unauthenticated","message":"<ja>","hint":"<ja>"}}'
+not_present:
+- OAuth 2.0 / OIDC — no /.well-known/oauth-authorization-server, oauth-protected-resource or openid-configuration on any host
+- Self-serve sign-up, developer console or key-management UI
+- Key prefix convention (none documented)

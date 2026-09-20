@@ -1,0 +1,20 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  registry.npmjs.org (-/v1/search text="b612 hakuto", text="hakuto-0209"; direct lookups b612, b612-mcp,
+  @hakuto/b612, b612-a2a), pypi.org (b612, b612-mcp), api.github.com repository search (hakuto-0209, "b612
+  a2a", "b612 mcp hakuto", haneruto) and user lookups (hakuto-0209, hakuto0209, haneruto, b612-sheep), the
+  provider's quickstart at https://mcp.hakuto-0209.com/ and the uninstall page at
+  https://mcp.hakuto-0209.com/uninstall — 2026-09-19.
+package_count: 0
+official_count: 0
+packages: []
+note: >-
+  No first-party client library or CLI is published on any registry. The npm name "b612" exists but is an
+  unrelated package (no homepage, no repository, empty description); the other hits are font packages for
+  the B612 typeface. b612 is distributed as a REMOTE MCP connection configured with the client's own CLI
+  (`claude mcp add --transport http b612 https://mcp.hakuto-0209.com/mcp --header "x-b612-key: <key>"`;
+  the uninstall page also names `codex mcp remove b612` and a B612KEY environment variable), plus an optional
+  set of local Claude Code assets (.claude/skills/b612, .claude/agents/b612-*.md, .claude/hooks/b612-*)
+  delivered through the licensed install flow and a former zip distribution — none of which is a public
+  registry artifact. No SDKs pointer is emitted.

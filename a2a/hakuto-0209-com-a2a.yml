@@ -1,0 +1,162 @@
+generated: '2026-09-19'
+method: probed
+source: https://mcp.hakuto-0209.com/.well-known/agent-card.json
+card:
+  file: a2a/hakuto-0209-com-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: mcp.hakuto-0209.com
+  note: >-
+    Served from mcp.hakuto-0209.com, a subdomain of the provider's registrable domain that is also the MCP
+    server host and the A2A JSON-RPC host. The apex hakuto-0209.com (a Vercel static marketing site) 404s
+    both well-known card paths with Vercel's text/plain NOT_FOUND body. The same deployment is reachable at
+    its Vercel project host b612-a2a.vercel.app — the URL the a2aregistry.org listing pointed at — and the
+    two hosts return byte-identical cards, so the vercel.app host is the origin and mcp.hakuto-0209.com is
+    the provider's own name for it; the record uses the provider's domain. The legacy /.well-known/agent.json
+    is ALSO served (200, 7,263 bytes) and is the identical card with the signatures[] block omitted. Every
+    other /.well-known/* path on the host (and a negative-control path that cannot exist) returns an Express
+    "Cannot GET" text/html 404, so the 200s are served documents, not a catch-all. Ownership is not in
+    question: the card's provider.organization is "HaneruTo" with provider.url https://hakuto-0209.com, the
+    apex site links the same info@hakuto-0209.com contact the data policy names, and the JWS signature's jku
+    points back at this host's own JWKS.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://mcp.hakuto-0209.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  body_bytes: 7527
+  body_parses_as: JSON object with AgentCard shape (name, description, version, url, preferredTransport, protocolVersion, capabilities, defaultInputModes, defaultOutputModes, skills, provider, documentationUrl, securitySchemes, security, supportedInterfaces, signatures)
+  signature_verification:
+    verified: true
+    method: >-
+      JWS (RFC 7515) with protected header {alg: EdDSA, kid: b612-a2a-2026-09, jku:
+      https://mcp.hakuto-0209.com/.well-known/jwks.json}; payload = the card without signatures[],
+      canonicalised per RFC 8785 (JCS); verified 2026-09-19 with the Ed25519 key of matching kid from the
+      published JWKS. A non-canonical (insertion-order) payload does NOT verify, so the signer used JCS as the
+      A2A specification requires.
+    jwks: well-known/hakuto-0209-com-jwks.json
+  corroborating_probes:
+  - url: https://mcp.hakuto-0209.com/.well-known/agent.json
+    http_status: 200
+    note: Legacy pre-0.3 path. Same card without the signatures[] block (7,263 bytes).
+  - url: https://b612-a2a.vercel.app/.well-known/agent-card.json
+    http_status: 200
+    note: Byte-identical to the mcp.hakuto-0209.com card; this is the Vercel origin behind the custom domain.
+  - url: https://hakuto-0209.com/.well-known/agent-card.json
+    http_status: 404
+  - url: https://hakuto-0209.com/.well-known/agent.json
+    http_status: 404
+  - url: https://mcp.hakuto-0209.com/.well-known/jwks.json
+    http_status: 200
+    note: One Ed25519 (OKP) key, kid b612-a2a-2026-09, use sig, alg EdDSA.
+  - url: https://mcp.hakuto-0209.com/.well-known/apievangelist-negative-control-7f3a9c.json
+    http_status: 404
+    note: Negative control — a path that cannot exist also 404s, so the host is not a catch-all.
+  - url: https://mcp.hakuto-0209.com/a2a/v1
+    method: GET
+    http_status: 401
+    response: '{"error":{"code":"unauthenticated","message":"APIキー（b612 ライセンスキー）が指定されていません","hint":"ヘッダー x-b612-key に b612 のライセンスキーを入れてください。キー無しでも次のスキルは試せます: principles / rules（データ取扱いは https://mcp.hakuto-0209.com/terms）"}}'
+  - url: https://mcp.hakuto-0209.com/a2a/v1
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tasks/get","params":{"id":"apievangelist-nonexistent-probe"}}'
+    http_status: 401
+    note: >-
+      Same unauthenticated envelope. The gate sits in front of the JSON-RPC dispatcher: without an
+      x-b612-key header no A2A method is reachable, including the two skills (principles, rules) the card
+      and the 401 hint both describe as keyless. Not resolved here — no key was requested and no message was
+      sent with one. The keyless tier IS reachable over MCP (see mcp/).
+  - url: https://a2aregistry.org
+    note: >-
+      First seen as one of 415 agents on a2aregistry.org (fetched 2026-09-19, author "HaneruTo", card URL
+      https://b612-a2a.vercel.app/.well-known/agent-card.json), which is how the provider entered the harvest
+      backlog. The card above was fetched directly from the provider's own host.
+agent_card:
+  name: b612
+  description: >-
+    Japanese-market code review agent. Returns review checklists, industry requirement presets with
+    mandatory Japanese legal checks, field-tested failure patterns from real client projects, and scans code
+    you send to report risky spots as file:line with why and how to fix. Deterministic checks — no LLM
+    inference. Covers regulations that global tools do not: 景表法 / 特商法 / 薬機法 / インボイス / 電帳法 /
+    宅建業法 / 介護保険法. Free to try: principles and rules need no key (20 req/min per IP); agent-to-agent
+    access is a monthly flat fee with a call cap, priced on contact.
+  url: https://mcp.hakuto-0209.com/a2a/v1
+  version: 0.1.0
+  protocol_version: '0.3'
+  preferred_transport: JSONRPC
+  provider:
+    organization: HaneruTo
+    url: https://hakuto-0209.com
+  documentation_url: https://mcp.hakuto-0209.com/terms
+  capabilities:
+    streaming: false
+    push_notifications: false
+  default_input_modes: [text/plain, application/json]
+  default_output_modes: [text/plain]
+  security_schemes:
+    b612ApiKey: {type: apiKey, in: header, name: x-b612-key}
+  security: [{b612ApiKey: []}]
+  supports_authenticated_extended_card: false
+  supported_interfaces:
+  - {url: https://mcp.hakuto-0209.com/a2a/v1, protocolBinding: JSONRPC, protocolVersion: '1.0'}
+  - {url: https://mcp.hakuto-0209.com/a2a/v1, protocolBinding: JSONRPC, protocolVersion: '0.3'}
+  signatures: 1 (EdDSA, kid b612-a2a-2026-09, verified — see x-evidence)
+  skill_count: 6
+  skills:
+  - {id: principles, name: Review principles / b612 の思考原則, tags: [code-review, principles, engineering-discipline, japanese], keyless: true}
+  - {id: review-checklist, name: Review checklist by target type / 対象別レビュー観点, tags: [code-review, checklist, landing-page, ecommerce, saas, japanese]}
+  - {id: patterns, name: Field-tested failure patterns / 実戦パターン, tags: [postmortem, lessons-learned, debugging, japanese, line-messaging-api]}
+  - {id: domain-preset, name: Industry presets (Japan) / 業種別プリセット, tags: [japanese-law, compliance-jp, keihyoho, tokushoho, yakkiho, invoice-jp, domain-model, requirements]}
+  - {id: scan-code, name: Scan code and report findings / コード検査, tags: [static-analysis, code-review, security, bug-detection, japanese]}
+  - {id: rules, name: Detection rules / 検出ルール一覧, tags: [static-analysis, transparency, rules], keyless: true}
+  skill_invocation: >-
+    Every skill carries bilingual examples[] as plain-text prompts (e.g. "What rules does your scanner
+    apply?"), inputModes text/plain + application/json and outputModes text/plain. scan-code is the only
+    skill that takes source text; the data policy states it is analysed in memory and discarded.
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: '0.3'
+  preferred_transport: JSONRPC
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: true
+  grade_basis: >-
+    Graded against the A2A 1.0.0 hard checks. capabilities is an OBJECT (pass) with streaming and
+    pushNotifications. protocolVersion is present at the top level (pass), declared as "0.3". skills is an
+    ARRAY (pass) of six fully-populated skills, each with id, name, description, tags, examples, inputModes
+    and outputModes. All three optional discriminators are present. The card additionally carries the
+    1.0.0-style supportedInterfaces[] block (two entries on one URL, protocolVersion 1.0 and 0.3), a
+    securitySchemes/security pair, provider, documentationUrl and a verified JWS signature — a more complete
+    card than most in the catalog.
+  deviations:
+  - field: protocolVersion vs supportedInterfaces[].protocolVersion
+    observed: top-level "0.3"; supportedInterfaces[] declares both "1.0" and "0.3" for the same JSON-RPC URL
+    note: >-
+      The card is a hybrid of the 0.3 top-level triple (url/preferredTransport/protocolVersion) and the 1.0
+      supportedInterfaces[] block. Internally consistent (one endpoint, one binding) and readable by clients
+      written against either revision; recorded because the top-level protocolVersion under-states what the
+      interfaces block advertises.
+  - field: securitySchemes / security vs observed behaviour
+    observed: >-
+      The card requires b612ApiKey on every skill while its own description and the endpoint's 401 hint say
+      principles and rules are usable without a key; an unauthenticated JSON-RPC POST is refused before
+      dispatch (401 on tasks/get).
+    note: The keyless tier is real over MCP (tools/list and tools/call b612_principles answered anonymously); over A2A it was not reachable in this probe.
+  - field: signatures[]
+    observed: present and verifiable
+    note: Recorded as a strength, not a fault — see x-evidence.signature_verification.
+surface_relationship:
+  note: >-
+    HaneruTo publishes two agent surfaces on one host, both fronting the same b612 knowledge base. A2A: six
+    skills at https://mcp.hakuto-0209.com/a2a/v1 behind x-b612-key. MCP: ten tools at
+    https://mcp.hakuto-0209.com/mcp, anonymous tools/list, where four tools (design, reference, grow, notes)
+    and the update procedure have no A2A skill counterpart and A2A's scan-code has no MCP tool — the MCP
+    server's own instructions state it has no input for source code, so scanning happens client-side
+    against b612_rules over MCP but server-side over A2A. No REST/OpenAPI surface exists (see
+    mcp/hakuto-0209-com-mcp.yml); a tool crosswalk is therefore not emitted.

@@ -1,0 +1,87 @@
+generated: '2026-09-19'
+method: derived
+source: >-
+  mcp/hakuto-0209-com-mcp-tools.json (the live tools/list, 10 tools with inputSchema and
+  execution.taskSupport), the MCP initialize instructions, the A2A agent card (6 skills) and the data policy
+  at https://mcp.hakuto-0209.com/terms. There is no OpenAPI, so 0-working/derive-agentic-access.py could not
+  be run; the classification below applies the same heuristics (Curity Access Intelligence vocabulary,
+  research/curity/agentic-governance/) to the MCP tools and A2A skills by hand from what each declares and
+  what the provider states about side effects.
+description: >-
+  Recommended x-agentic-access execution contracts for the b612 agent surfaces. Every MCP tool declares
+  execution.taskSupport "forbidden" and returns reference text; the server states it has no input for
+  source code. Every operation is therefore classified connected/read. The single elevation is b612_notes,
+  which reads a per-licence store of personal memos and so needs a bound subject and an audit trail. A
+  governance starting point, not a provider claim — review and bind audience per deployment.
+provider_guidance:
+  source: MCP initialize instructions (https://mcp.hakuto-0209.com/mcp)
+  summary: >-
+    The provider's own instructions to a connecting agent: consult b612_patterns with the project's keywords
+    before starting; pull b612_domain_preset and b612_review_checklist (sending only short strings such as
+    an industry name); apply the returned checkpoints to the local code yourself; re-check with the
+    checklist and the three self-questions before declaring done; apply b612_rules locally for mechanical
+    checks. "There is no input on this server for code bodies — customer code never reaches the provider."
+summary:
+  operations: 16
+  mcp_tools: 10
+  a2a_skills: 6
+  by_action_class:
+    connected: 16
+  by_consequence:
+    read: 16
+  human_in_the_loop_required: 0
+  subject_required: 1
+operations:
+- surface: mcp
+  tool: b612_principles
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+  note: Keyless tier (20 req/min per IP).
+- surface: mcp
+  tool: b612_review_checklist
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: mcp
+  tool: b612_patterns
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: mcp
+  tool: b612_domain_preset
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: mcp
+  tool: b612_rules
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+  note: Keyless tier (20 req/min per IP).
+- surface: mcp
+  tool: b612_design
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: mcp
+  tool: b612_reference
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: mcp
+  tool: b612_grow
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: mcp
+  tool: b612_notes
+  x-agentic-access: {action-class: connected, consequence: read, subject: required, audience: null, token: {max-ttl: 3600}, audit: required}
+  note: Reads the licence holder's own LINE memos (personal data, 90-day retention per the data policy). Bind the licence to a subject and audit reads.
+- surface: mcp
+  tool: b612_update
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+  note: Returns an update PROCEDURE the client executes locally; the local execution (file writes under .claude/) is the agent's own act, outside this server's surface, and the provider's uninstall page documents exactly which files it touches.
+- surface: a2a
+  skill: principles
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: a2a
+  skill: review-checklist
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: a2a
+  skill: patterns
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: a2a
+  skill: domain-preset
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+- surface: a2a
+  skill: scan-code
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}
+  note: The only operation that transmits source text to the provider. Read-class because the provider states it is analysed in memory and discarded (no persistence, no LLM); a deployment that treats source as confidential should still gate WHICH files an agent may send.
+- surface: a2a
+  skill: rules
+  x-agentic-access: {action-class: connected, consequence: read, subject: optional, audience: null, token: {max-ttl: 3600}, audit: none}

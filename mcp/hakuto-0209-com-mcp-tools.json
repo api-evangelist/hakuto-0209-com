@@ -1,0 +1,202 @@
+{
+  "tools": [
+    {
+      "name": "b612_principles",
+      "title": "b612 の思考原則",
+      "description": "b612 メソッドの思考の核（NO SPECULATION・実装前の3問自問・5原則・握りつぶし禁止）を返す。レビューや実装を始める前に読み、原則に沿って進めること。",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_review_checklist",
+      "title": "b612 レビュー観点（対象別）",
+      "description": "対象の種類に応じた b612 のレビュー観点を返す。返ってきた観点を使って呼び出し側の AI が実レビューを行う。対応: lp, hp, ec, api, saas, game, form, generic",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "target_type": {
+            "type": "string",
+            "description": "レビュー対象の種類。次のいずれか: lp, hp, ec, api, saas, game, form, generic（不明なら generic）"
+          }
+        },
+        "required": [
+          "target_type"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_patterns",
+      "title": "b612 実戦patterns",
+      "description": "b612 の実戦ノウハウ（典型エラー・推測実装の傾向・過去に効いた意思決定）を返す。案件固有名は含まない公開版。全文は約88,000字あるため、既定は見出し索引のみを返す。query に検索語を渡すと一致した節だけを返す（推奨）。",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "query": {
+            "description": "検索語（例: LINE, 決済, 予約, レスポンシブ）。未指定なら見出し索引",
+            "type": "string"
+          },
+          "full": {
+            "description": "true で全文（max_chars の上限まで）。既定 false",
+            "type": "boolean"
+          },
+          "max_chars": {
+            "description": "出力の上限文字数（既定 20000）。超過分は落とした節名を明記する",
+            "type": "number"
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_domain_preset",
+      "title": "b612 ドメインプリセット",
+      "description": "業種/ドメイン別の必須モデル・エッジケース・必須法令・アンチパターンを返す。対応ドメイン: accounting, ai-chat, ai-content-ops, android, beauty, blog, booking, chat, community, corporate, corporate-story, crm, ec, event, fukushi, game, healthcare, hr, instagram, inventory, ios, line, llmo, lms, lp, pos, project, rag, realestate, restaurant, retrogame, saas, seo, subscription, survey, task",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "業種/ドメイン名（例: ec, booking, healthcare, saas）。対応: accounting, ai-chat, ai-content-ops, android, beauty, blog, booking, chat, community, corporate, corporate-story, crm, ec, event, fukushi, game, healthcare, hr, instagram, inventory, ios, line, llmo, lms, lp, pos, project, rag, realestate, restaurant, retrogame, saas, seo, subscription, survey, task"
+          }
+        },
+        "required": [
+          "domain"
+        ]
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_rules",
+      "title": "b612 検出ルール一覧",
+      "description": "コードに当てる検出ルール（ID・重大度・なぜ危険か・直し方）の一覧を返す。**呼び出し側の AI がこのルールを手元のコードに当てて検査する**（コードは b612 サーバーに送らない）。握りつぶし / 秘密の直書き / 0行更新の見逃し / タイマー多重起動 / 印刷崩れ / 破壊的SQL / XSS 等。ルールID: swallow-empty-catch, swallow-catch-comment-only, swallow-nullish-default, swallow-nullish-any, supabase-update-without-select, hardcoded-secret, console-log-secret, raf-loop-not-idempotent, setinterval-no-clear, top-level-sdk-client, next-force-dynamic, print-transform-scale, global-element-selector, img-no-dimensions, destructive-sql, bulk-update-no-where, dangerous-html, eval-use, mcp-stdout-log, line-postback-encode, dark-body-light-surface, print-white-text, last-child-visual, aspect-ratio-with-object-position, tap-target-too-small, leftover-min-height, overflow-hidden-full-height, empty-element-no-fallback, fail-open-secret-check, charge-before-persist, fetch-result-ignored",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_design",
+      "title": "HP/LP のデザイン規約を引く",
+      "description": "ホームページ・LP・UI・チラシを作る前に必ず引く。生成AIが出しがちで顧客に「AIくさい」と言われる形（注記の左に色の縦棒・器と同じ色の面・均一な3列カード・全部同じ角丸と影）の禁止事項と、カードは角張らせる・並びの間隔は親のgapで持つ・複雑なSVGは無料素材を使う、などの必須事項を返す。あわせて、放っておくと生成AIが出さない6つ（斜めの帯・斜めの文字・派手なCTA・追従CTA・写真の上の文字・飾りの浮遊）と、そのまま貼れるCSS/JSの一覧を返す。snippet に名前を渡すとその実装を全文返す。",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "snippet": {
+            "description": "実装が欲しいときにファイル名（例 cta-shine.css / sticky-cta.js）。省略すると規約と一覧を返す",
+            "type": "string"
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_reference",
+      "title": "実在サイトの参考を引く（Honmono）",
+      "description": "HP・LP・UI を作る前に、実在の公開サイトを参考として引く。業種や雰囲気（例:「カフェのLP」「士業のコーポレート」「買取サービス」）を渡すと、日本で実際に公開されている LP/HP を数件、URL と実測した配色（＋分かればフォント）で返す。生成AIが出しがちな『それっぽいだけ』のデザインを、実在サイトの型に寄せるために使う。さらに、その業種で使える無料画像（ボーの素材やさん）の直リンクを最大60点まとめて返す。画像が要る HP/LP/UI 制作では必ずこれを呼び、返ってきた画像を各セクションに置くこと。業種を省くと、収録している業種の一覧を返す。",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "industry_or_vibe": {
+            "description": "業種か雰囲気（例: カフェのLP / 士業のコーポレート / 買取 / BtoB SaaS）。省略すると収録業種の一覧を返す",
+            "type": "string"
+          },
+          "count": {
+            "description": "返す件数（既定5・最大10）",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_grow",
+      "title": "SNS/note/AEOで売る型を引く（Grow層）",
+      "description": "作った HP/LP/商品/コンテンツを、SNS（X / Instagram / Threads）・note・AI検索（AEO）で広めて売るための戦略の作り方を返す。「集客したい」「SNS戦略」「売り方」「AEO」「AIの回答に出したい」「note を読まれたい」等で使う。7つの汎用原則＋チャネル別の型＋AEOの型に加え、生成AIが出しがちな戦略が抜かす『日本の法令ガード（ステマ規制・景表法・薬機法・特商法）』と『計測の実装（UTM・4指標）』を必ず含む。product に何を・誰に・いくらで売るか、goal に目標、channel に重点媒体を渡すと、その条件に当てて返す。",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "product": {
+            "description": "何を・誰に・いくらで売るか（例: 980円の哲学エッセイ、決断できない人向け）",
+            "type": "string"
+          },
+          "goal": {
+            "description": "目標（認知拡大 / リスト獲得 / 販売 など）",
+            "type": "string"
+          },
+          "channel": {
+            "description": "重点チャネル（x / instagram / threads / note / aeo / all）。省略可",
+            "type": "string"
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_notes",
+      "title": "公式LINEに送ったメモを読む",
+      "description": "利用者が hakuto の公式LINE に送ったメモを読み込む。「今日のメモをまとめて」「昨日のメモ見せて」「今週のアイデア整理して」などと言われたらこれを使う。days で遡る日数を指定する（既定は1＝今日ぶん）。返ってくるのは日付ごとに並べた生のメモ。要約・分類・タスク化は、この結果を読んで自分で行うこと。",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "days": {
+            "description": "何日ぶん遡るか。今日だけなら 1、今週なら 7。既定は 1",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 90
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "b612_update",
+      "title": "b612 をアップデートする（資産を最新にする）",
+      "description": "b612 のアップデート。エージェント・法令ファイル・業種プリセット・雛形・参照ドキュメントを最新に更新する手順を返す。「b612 をアップデートして」「b612 を最新にして」と言われたらこれを使う。返ってきたコマンドを実行すると、手元と違うファイルだけが置き換わる（既存は .bak を残す）。新しい専門エージェントが増えたときや、法令が改正されたときに実行する。",
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "base_url": {
+            "description": "接続先（通常は指定不要）",
+            "type": "string"
+          }
+        }
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}

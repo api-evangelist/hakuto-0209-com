@@ -1,0 +1,98 @@
+generated: '2026-09-19'
+method: searched
+source: >-
+  Observed behaviour of https://mcp.hakuto-0209.com/mcp and https://mcp.hakuto-0209.com/a2a/v1 (live probes
+  2026-09-19), the agent card, the provider quickstart at https://mcp.hakuto-0209.com/ and the data policy
+  at https://mcp.hakuto-0209.com/terms. b612 exposes MCP and A2A only — there is no REST/OpenAPI surface,
+  so the REST-shaped sections (pagination, expansion, versioning header) are recorded as not applicable
+  rather than derived.
+description: >-
+  Cross-cutting runtime semantics of the b612 agent surfaces: how an agent authenticates, what the
+  request/response shapes are on each protocol, how errors come back, what the rate-limit and body-size
+  signals are, and — the point that matters for an agent — that the entire surface is read-only reference
+  lookup, so idempotency, reversibility and dry-run are not applicable rather than absent.
+
+surfaces:
+  mcp:
+    endpoint: https://mcp.hakuto-0209.com/mcp
+    style: 'MCP Streamable HTTP, JSON-RPC 2.0 over POST; responses as text/event-stream (event: message / data: <json>)'
+    protocol_version: '2025-06-18'
+    required_headers: ['Content-Type: application/json', 'Accept: application/json, text/event-stream', 'x-b612-key: <license key> (keyless for principles/rules)']
+    get_behaviour: '406 application/json — {"jsonrpc":"2.0","error":{"code":-32000,"message":"Not Acceptable: Client must accept text/event-stream"},"id":null}'
+  a2a:
+    endpoint: https://mcp.hakuto-0209.com/a2a/v1
+    style: A2A 0.3 JSON-RPC 2.0 over POST
+    required_headers: ['Content-Type: application/json', 'x-b612-key: <license key>']
+    get_behaviour: 401 unauthenticated (JSON envelope)
+
+authentication:
+  scheme: API key in the x-b612-key header (b612 license key)
+  keyless_tier: principles and rules (card); confirmed over MCP for b612_principles
+  detail: authentication/hakuto-0209-com-authentication.yml
+
+surface_mutability:
+  read_only: true
+  basis: >-
+    All ten MCP tools return reference text and declare execution.taskSupport "forbidden"; the server's
+    initialize instructions state it has no input for source code. The six A2A skills return checklists,
+    presets, patterns and rules; scan-code accepts source text but the data policy states it is analysed in
+    memory and discarded — nothing is created, changed or persisted on the provider side by any call.
+    b612_notes READS a per-licence memo store that is written through the provider's LINE account, not
+    through this surface.
+
+idempotency:
+  coverage: na
+  supported: null
+  mechanism: null
+  applies_to: none — no mutating operation exists on either protocol
+  note: >-
+    Every call is a safe read; repeating it yields the same reference content. No Idempotency-Key header is
+    documented and none is needed. Recorded as na so the read-only surface leaves the denominator rather
+    than scoring zero.
+
+reversibility:
+  coverage: na
+  write_surfaces: []
+  note: >-
+    No write surface exists, so there is nothing to cancel, refund, void or restore. The only side effects
+    the provider documents are its own usage counters per licence hash (data policy §8), which are not
+    caller-reversible and not exposed through the API.
+
+dry_run_mode:
+  coverage: na
+  note: The keyless tier (principles, rules over MCP at 20 req/min per IP) lets an agent exercise the protocol without a licence, but that is a free read tier, not a dry-run of a mutation.
+
+pagination:
+  style: none
+  note: >-
+    No list endpoints. b612_patterns bounds its own output instead — heading index by default, `query` to
+    return matching sections, `full` + `max_chars` (default 20000) for the whole text, with dropped section
+    names stated when the cap truncates.
+
+field_expansion: {supported: false}
+metadata: {supported: false}
+
+request_id_tracing:
+  header: null
+  note: No request-id header is documented or returned; Vercel's x-vercel-id edge header is present on every response but is an infrastructure trace, not an API contract.
+
+versioning:
+  scheme: semver on the server/card (0.1.0); A2A protocolVersion 0.3 with supportedInterfaces[] also declaring 1.0; MCP protocol negotiated at initialize (2025-06-18)
+  header: null
+  detail: lifecycle/hakuto-0209-com-lifecycle.yml
+
+error_envelope:
+  a2a_http_layer: '{"error":{"code":"<slug>","message":"<ja>","hint":"<ja>"}} — e.g. code "unauthenticated" with HTTP 401'
+  mcp: 'JSON-RPC 2.0 error object {"code":-32601,"message":"Method not found"} inside a 200 text/event-stream'
+  format: custom (not RFC 9457)
+  detail: errors/hakuto-0209-com-problem-types.yml
+
+rate_limit_signaling:
+  documented_limits: '20 requests/min per IP on the keyless skills (agent card); all requests rate limited per IP (data policy)'
+  response_headers: none observed (no RateLimit-*, X-RateLimit-* or Retry-After on the probed responses)
+  exhaustion_status: not documented
+  body_limit: 4 MB per request (data policy §5)
+  detail: rate-limits/hakuto-0209-com-rate-limits.yml
+
+localization:
+  note: Tool titles, descriptions, instructions and error messages are Japanese with English mirrors in the agent card; an agent should expect Japanese text in every payload.
