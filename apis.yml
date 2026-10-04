@@ -30,7 +30,7 @@ tags:
 - Compliance
 - Web Development
 - Japan
-- agent-native
+- Agent-Native
 tags_raw:
 - Agents
 - MCP
@@ -42,6 +42,7 @@ tags_raw:
 - Web development
 - Japan
 - Agent-native
+- agent-native
 apis:
 - aid: hakuto-0209-com:b612-mcp-server
   name: b612 MCP Server
@@ -59,6 +60,10 @@ apis:
   humanURL: https://mcp.hakuto-0209.com/
   baseURL: https://mcp.hakuto-0209.com/mcp
   tags:
+  - MCP
+  - Agent-Native
+  - Code Review
+  tags_raw:
   - MCP
   - agent-native
   - Code Review
@@ -85,6 +90,10 @@ apis:
   humanURL: https://mcp.hakuto-0209.com/
   baseURL: https://mcp.hakuto-0209.com/a2a/v1
   tags:
+  - A2A
+  - Agent-Native
+  - Code Review
+  tags_raw:
   - A2A
   - agent-native
   - Code Review
@@ -152,3 +161,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 18
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://mcp.hakuto-0209.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3"
+  control: 404
