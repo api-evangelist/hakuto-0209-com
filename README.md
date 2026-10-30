@@ -64,5 +64,116 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-HaneruTo is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://hakuto-0209.com/
+HaneruTo — trading as hakuto, brand B612 SHEEP — is a Japanese one-person, AI-assisted web and systems development studio founded in 2025 that also ships b612, a Japanese-market code-review agent for AI coding assistants: review checklists by target type, industry presets with mandatory Japanese legal checkpoints (景表法 / 特商法 / 薬機法 / インボイス / 電帳法 / 宅建業法 / 介護保険法), failure patterns and 31 deterministic detection rules — no LLM involved; the server has no input for customer source code. b612 is published two ways on mcp.hakuto-0209.com: a remote MCP server at /mcp (Streamable HTTP, protocol 2025-06-18, ten tools with real inputSchemas, anonymous tools/list, keyless principles/rules) and an A2A 0.3 agent whose EdDSA-signed card at /.well-known/agent-card.json declares six skills behind an x-b612-key licence header, with the signing key at /.well-known/jwks.json. No REST/OpenAPI surface, no SDK, no self-serve sign-up; agent access is a monthly flat-fee licence priced on contact.
+
+**Areas:** Agents · MCP · A2A · Code Review · Static Analysis · Developer Tools · Compliance · Web Development · Japan · Agent-Native
+
+## HaneruTo on APIs.io
+
+Everything profiled for HaneruTo is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/hakuto-0209-com/](https://apis.io/providers/hakuto-0209-com/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [b612 MCP Server](https://apis.io/apis/hakuto-0209-com/b612-mcp-server/) — Remote Model Context Protocol server at https://mcp.hakuto-0209.com/mcp (Streamable HTTP, POST only — GET returns 406 — protocol version 2025-06-18,…
+- [b612 A2A Agent](https://apis.io/apis/hakuto-0209-com/b612-a2a-agent/) — Agent2Agent (A2A) protocol surface: an agent card served from https://mcp.hakuto-0209.com/.well-known/agent-card.json (protocolVersion 0.3, JSONRPC…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [hakuto-0209-com-mcp.yml](https://apis.io/servers/hakuto-0209-com/hakuto-0209-com-mcp-yml/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Hakuto 0209 Com Agentic Access](https://apis.io/agentic-access/hakuto-0209-com/hakuto-0209-com-agentic-access/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Hakuto 0209 Com Authentication](https://apis.io/security/hakuto-0209-com/hakuto-0209-com-authentication/)
+- [Hakuto 0209 Com Domain Security](https://apis.io/security/hakuto-0209-com/hakuto-0209-com-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Hakuto 0209 Com Plans Pricing](https://apis.io/plans/hakuto-0209-com/hakuto-0209-com-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Hakuto 0209 Com Rate Limits](https://apis.io/rate-limits/hakuto-0209-com/hakuto-0209-com-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://hakuto-0209.com/)
+- [Documentation](https://mcp.hakuto-0209.com/)
+- [Pricing](https://hakuto-0209.com/legal/hakuto-company.html)
+- [Support](https://hakuto-0209.com/#contact)
+- [Terms of service](https://hakuto-0209.com/legal/hakuto-terms.html)
+- [Privacy policy](https://hakuto-0209.com/legal/hakuto-privacy.html)
+
+## API Evangelist rating
+
+**Kin Score 30.1** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 26.2 |
+| Access clarity | 52.6 |
+
+**Agent readiness 18.9** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | conformant |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 32.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/hakuto-0209-com/](https://apis.io/providers/hakuto-0209-com/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for HaneruTo: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/hakuto-0209-com/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
